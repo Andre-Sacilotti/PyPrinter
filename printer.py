@@ -36,7 +36,6 @@ class PyPrinter(object):
         self.conn = cups.Connection ()
         pdf = PdfFileReader(open(self.name,'rb'))
         self.pages = pdf.getNumPages()
-        print(self.root.winfo_width())
 
         self.name_label = tk.Message(text =self.name.split("/")[-1], font=tkFont.Font(family=self.font_family, size=self.font_size), width=self.root.winfo_width()-20).grid(row=3,
          column=0, pady = self.padding,sticky="wens", padx = self.padding)
@@ -75,15 +74,15 @@ class PyPrinter(object):
                                      sticky="wens", padx = self.padding)
 
     def send_print_2(self):
-        self.popup.destroy
-        second_side = ",".join([str(i) for i in range(int(35+1)) if i%2 ==0])
+        self.popup.destroy()
+        second_side = ",".join([str(i) for i in range(1,int(self.pages+1)) if i%2 ==0])
 
-        printid = self.conn.printFile(self.printers.get(), self.name, "PyPrinter First Side", {"page-ranges":second_side, "print-quality":"4"})
+        printid = self.conn.printFile(self.printers.get(), self.name, "PyPrinter Second Side", {"page-ranges":second_side, "print-quality":"4"})
         while self.conn.getJobs().get(printid, None) is not None:
             time.sleep(1)
 
     def send_print_first(self):
-        first_side = ",".join([str(i) for i in range(int(35+1)) if i%2 !=0])
+        first_side = ",".join([str(i) for i in range(1,int(self.pages+1)) if i%2 !=0])
 
         printid = self.conn.printFile(self.printers.get(), self.name, "PyPrinter First Side", {"page-ranges":first_side, "print-quality":"4"})
         while self.conn.getJobs().get(printid, None) is not None:
